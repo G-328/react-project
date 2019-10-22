@@ -8,5 +8,5 @@ import {IS_DEV} from "../config";
 export default createStore(
   reducer,
   IS_DEV ? composeWithDevTools(applyMiddleware(thunk)) : applyMiddleware(thunk)
-  
+
   )

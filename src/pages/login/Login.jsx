@@ -6,6 +6,7 @@ import { Form, Icon, Input, Button } from 'antd'
 
 import logo from './images/logo.png'
 import './Login.less'
+import ajax from '../../api/ajax'
 
 const { Item } = Form // 必须在所有import的下面
 
@@ -16,7 +17,34 @@ class Login extends Component {
     //进行统一的表单认证
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('发送ajax请求', values);
+        console.log('发送ajax请求', values)
+        // axios.post('/login', qs.stringify(values))
+        /* ajax.post('/login', values)
+           .then(({ user, token }) => {
+             console.log(response)
+            const result = response.data
+            console.log('请求成功', result)
+            if (result.status === 0) {
+              const { user, token } = result.data
+              console.log('登录成功', user, token)
+            } else {
+              console.log('登陆失败', result.msg)
+            } 
+            console.log('登录成功', user, token)
+          })
+          .catch((error) => {//errpr就是result.msg
+            console.log('登录失败', error)
+          }) */ 
+          ajax.post('/login',values)
+          .then((result)=>{
+            //是继续解构，是默认值
+            const {status,data:{user,token},msg}=result
+            if(status===0){
+              console.log('登录成功',user,token)
+            }else{
+              console.log('登录失败',msg)
+            }
+          })
       } else {
 
       }
@@ -58,12 +86,12 @@ class Login extends Component {
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Item>
               {getFieldDecorator('username', {
-                initialValue:'',
+                initialValue: '',
                 rules: [
-                { required: true, whitespace: true, message: '用户名必须输入' },
-                { min: 4, message: '用户名不能小于4位' },
-                { max: 12, message: '用户名不能大于12位' },
-                { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名必须是英文、数字或下划线' }
+                  { required: true, whitespace: true, message: '用户名必须输入' },
+                  { min: 4, message: '用户名不能小于4位' },
+                  { max: 12, message: '用户名不能大于12位' },
+                  { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名必须是英文、数字或下划线' }
                 ],
               })(
                 <Input
@@ -74,7 +102,7 @@ class Login extends Component {
             </Item>
             <Form.Item>
               {getFieldDecorator('password', {
-                initialValue:'',
+                initialValue: '',
                 rules: [{ validator: this.validatePwd }],
               })(
                 <Input
