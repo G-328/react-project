@@ -1,10 +1,8 @@
 import React,{Component} from 'react';
-import PropTYpes from 'prop-types'
 
 export default class App extends Component{
-  
-  static propTypes={
-    
+  state={
+    count:0,
   }
   numberRef=React.createRef()
   incremet=()=>{

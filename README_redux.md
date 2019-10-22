@@ -16,6 +16,7 @@
 				redux中包含: createStore(), combineReducers(), applyMiddleware()
 				store对象: getState(), dispatch(), subscribe()
 				reducer函数: 根据原有的state和指定的action, 返回一个新的状态数据
+			
 				action creator: 返回action的工厂函数 
 
 		2). react-redux: 简化redux使用
