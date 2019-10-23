@@ -1,10 +1,10 @@
 import React,{Component} from 'react';
-import PropTYpes from 'prop-types'
+import PropTypes from 'prop-types'
 
 export default class App extends Component{
   
   static propTypes={
-    
+    store:PropTypes.object.isRequired
   }
   numberRef=React.createRef()
   incremet=()=>{
@@ -40,7 +40,7 @@ export default class App extends Component{
     }, 1000);
   }
   render(){
-    const {count} =this.state
+    const count =this.porps.store.getState()
     return (
       <div>
         <p>click {count} times</p>

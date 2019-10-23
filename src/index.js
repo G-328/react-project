@@ -5,5 +5,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import App from './App'
+import store from './redux/store'
 
-ReactDOM.render(<App/>, document.getElementById('root'))
+ReactDOM.render(<App store={store}/>, document.getElementById('root'))
+
+store.subscrib(()=>{
+  console.log('------')
+  ReactDOM.unmountComponentAtNode(document.getElementById('root'))
+  
+})
