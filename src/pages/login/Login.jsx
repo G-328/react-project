@@ -2,11 +2,13 @@
 登录的一级路由组件
 */
 import React, { Component } from 'react'
+import {Redirect} from 'react-router-dom'
 import { Form, Icon, Input, Button } from 'antd'
+import { connect } from 'react-redux'
 
+import { loginAsync } from '../../redux/action-creators/user'
 import logo from './images/logo.png'
 import './Login.less'
-import ajax from '../../api/ajax'
 
 const { Item } = Form // 必须在所有import的下面
 
@@ -17,7 +19,11 @@ class Login extends Component {
     //进行统一的表单认证
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('发送ajax请求', values)
+        const { username, password } = values
+        console.log('发送ajax请求', { username, password })
+
+        this.props.loginAsync(username, password)
+
         // axios.post('/login', qs.stringify(values))
         /* ajax.post('/login', values)
            .then(({ user, token }) => {
@@ -34,17 +40,17 @@ class Login extends Component {
           })
           .catch((error) => {//errpr就是result.msg
             console.log('登录失败', error)
-          }) */ 
-          ajax.post('/login',values)
-          .then((result)=>{
-            //是继续解构，是默认值
-            const {status,data:{user,token},msg}=result
-            if(status===0){
-              console.log('登录成功',user,token)
-            }else{
-              console.log('登录失败',msg)
-            }
-          })
+          }) */
+        /* ajax.post('/login',values)
+        .then((result)=>{
+          //是继续解构，是默认值
+          const {status,data:{user,token}={},msg}=result
+          if(status===0){
+            console.log('登录成功',user,token)
+          }else{
+            console.log('登录失败',msg)
+          }
+        }) */
       } else {
 
       }
@@ -74,7 +80,13 @@ class Login extends Component {
 
   render() {
     // console.log(this.props.form)
+    const { hasLogin } = this.props
+    if (hasLogin) {
+      // this.props.history.replace('/') //事件回调函数中使用
+      return <Redirect to='/'/>  //在render中使用
+    }
     const { getFieldDecorator } = this.props.form;
+    
     return (
       <div className="login">
         <header className="login-header">
@@ -121,6 +133,8 @@ class Login extends Component {
     )
   }
 }
-const LoginWrap = Form.create()(Login);
 
-export default LoginWrap
+export default connect(
+  state => ({ hasLogin: state.user.hasLogin }),
+  { loginAsync }
+)(Form.create()(Login))
