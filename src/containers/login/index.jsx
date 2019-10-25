@@ -2,13 +2,13 @@
 登录的一级路由组件
 */
 import React, { Component } from 'react'
-import {Redirect} from 'react-router-dom'
 import { Form, Icon, Input, Button } from 'antd'
 import { connect } from 'react-redux'
 
 import { loginAsync } from '../../redux/action-creators/user'
 import logo from './images/logo.png'
-import './Login.less'
+import './index.less'
+import WithChenkLogin from '../with-check-login'
 
 /* connect(
   state => ({ hasLogin: state.user.hasLogin }),
@@ -18,10 +18,11 @@ import './Login.less'
 const { Item } = Form // 必须在所有import的下面
 
 @connect(
-  state => ({ hasLogin: state.user.hasLogin }),
+  state => ({}),
   { loginAsync }
 )
 @Form.create()
+@WithChenkLogin // CheckLogin = WithChenkLogin(Login)
 class Login extends Component {
 
   handleSubmit = (event) => {
@@ -90,12 +91,7 @@ class Login extends Component {
 
   render() {
     // console.log(this.props.form)
-    const { hasLogin } = this.props
-    console.log(this.props)
-    if (hasLogin) {
-      // this.props.history.replace('/') //事件回调函数中使用
-      return <Redirect to="/" />  //在render中使用
-    }
+  
     const { getFieldDecorator } = this.props.form;
     
     return (

@@ -3,24 +3,26 @@
 */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {Redirect} from 'react-router-dom'
 import {removeUserToken} from '../../redux/action-creators/user'
 import {reqUsers} from '../../api'
+import WithChenkLogin from '../with-check-login'
 
+@connect(
+  state => ({user: state.user.user}),
+  {removeUserToken}
+)
+@WithChenkLogin
 class Admin extends Component {
   logout = () => {
     this.props.removeUserToken()
   }
   getUsers = async () => {
+    reqUsers()
     const result = await reqUsers()
     console.log('result',result)
   }
 
   render() {
-
-    if (!this.props.hasLogin) {
-      return <Redirect to='/login'/>
-    }
     return (
       <div>
         <p>Hello,{this.props.user.username}</p>
@@ -31,7 +33,4 @@ class Admin extends Component {
   }
 }
 
-export default connect(
-  state => ({user: state.user.user,hasLogin:state.user.hasLogin}),
-  {removeUserToken}
-)(Admin)
+export default Admin

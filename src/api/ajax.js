@@ -7,6 +7,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import store from '../redux/store'
 import { removeUserToken } from '../redux/action-creators/user'
+import history from '../history'
 
 const instance = axios.create({
   //超时时间
@@ -27,7 +28,7 @@ instance.interceptors.request.use(
     const token = store.getState().user.token
     if(token){
       // 当前请求的配置
-      config.headers['Authorization'] = 'atguigu_ ' + token
+      config.headers['Authorization'] = 'atguigu_' + token
     }
 
       //必须返回config ，要不然不能发请求了
@@ -55,9 +56,14 @@ instance.interceptors.response.use(
     //如果status为401，token有问题
     const {status,data:{msg}={}} = error.response
     if(status===401){
-      message.error(msg)
-      //删除用户信息，自动跳转到登录页面
-      store.dispatch(removeUserToken())
+      //如果当前没有在登陆界面(当前路由路径不是/login)
+      if(history.location.pathname !== '/login'){
+        //显示提示
+        message.error(msg)
+        //删除用户信息，自动跳转到登录页面
+        store.dispatch(removeUserToken())
+      }
+
     }else if (status===404) {
       message.error('请求资源不存在')
     }else{
