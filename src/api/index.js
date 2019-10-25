@@ -7,4 +7,8 @@ export const reqLogin = ({username,password}) => ajax({
     data:{username,password}
   })
 
-
+//获取用户列表的
+export const reqUsers =() => ajax({
+  url:'/manage/user/list',
+  method: 'GET'
+})
