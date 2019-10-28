@@ -3,13 +3,14 @@ import {Form,Input} from 'antd'
 import PropTypes from 'prop-types'
 
 const  {Item} = Form
-//添加分类的Form组件
 
+//添加/修改分类的Form组件
 @Form.create()
-class AddForm extends Component {
+class AddUpdateForm extends Component {
 
   static propTypes = { //给AddForm函数添加
-    setForm:PropTypes.func.isRequired
+    setForm:PropTypes.func.isRequired,
+    categoryName:PropTypes.string,  //不是必须的，添加分类没有
   }
   constructor(props){
     super(props)
@@ -24,7 +25,8 @@ class AddForm extends Component {
         <Item>
           {
             getFieldDecorator('categoryName',{
-              initialValue:'',
+              //如果手动输入修改了重新指定无效
+              initialValue:this.props.categoryName || '',  
               rules:[
                 {required:true,message:'分类名称必须输入'}
               ]
@@ -38,4 +40,4 @@ class AddForm extends Component {
   }
 }
 
-export default AddForm
+export default AddUpdateForm
