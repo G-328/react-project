@@ -1,48 +1,49 @@
 import React, { Component } from 'react'
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom'
-import {withRouter} from 'react-router-dom'
-import {connect} from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-import {setHeaderTitle} from '../../../redux/action-creators/header-title'
+import { setHeaderTitle } from '../../../redux/action-creators/header-title'
 import menuList from '../../../config/menu-config'
 import logo from '../../../assets/images/logo.png'
 import './index.less'
 
 const { SubMenu, Item } = Menu;
 
-@connect(state => ({headerTitle:state.headerTitle}),{setHeaderTitle})
+@connect(state => ({ headerTitle: state.headerTitle }), { setHeaderTitle })
 @withRouter
 class LeftNav extends Component {
 
-   /*
-  根据指定菜单数据列表产生<Menu>的子节点数组
-  使用 reduce() + 递归
-  */
+  /*
+ 根据指定菜单数据列表产生<Menu>的子节点数组
+ 使用 reduce() + 递归
+ */
   getMenuNodes = (menuList) => {
     // 得到当前请求的path
     const path = this.props.location.pathname
 
     return menuList.reduce((pre, item) => {
       if (!item.children) {
-        if (path===item.key && this.props.headerTitle!==item.title) {
+        if (path.indexOf(item.key)===0 && this.props.headerTitle !== item.title) {
           this.props.setHeaderTitle(item.title)
         }
         pre.push((
           <Item key={item.key}>
             <Link to={item.key} onClick={() => {
-              if (path===item.key && this.props.headerTitle!==item.title) {
+              if (path === item.key && this.props.headerTitle !== item.title) {
                 this.props.setHeaderTitle(item.title)
-              }}}>
-              <Icon type={item.icon}/>
+              }
+            }}>
+              <Icon type={item.icon} />
               <span>{item.title}</span>
             </Link>
           </Item>
         ))
       } else {
-        const cItem = item.children.find(item => item.key === path)
-        if(cItem){
-          this.openKey =item.key
+        const cItem = item.children.find(item => path.indexOf(item.key)===0)
+        if (cItem) {
+          this.openKey = item.key
         }
 
         pre.push(
@@ -50,7 +51,7 @@ class LeftNav extends Component {
             key={item.key}
             title={
               <span>
-                <Icon type={item.icon}/>
+                <Icon type={item.icon} />
                 <span>{item.title}</span>
               </span>
             }
@@ -109,8 +110,11 @@ class LeftNav extends Component {
 
   render() {
     console.log(1111)
-    const selectedkey =this.props.location.pathname
-    const menuNodes =this.getMenuNodes(menuList)
+    const menuNodes = this.getMenuNodes(menuList)
+    let selectedkey = this.props.location.pathname
+    if (selectedkey.indexOf('/product') === 0) {
+      selectedkey = '/product'
+    }
 
     return (
       <div className="left-nav">
